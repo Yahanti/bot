@@ -26,7 +26,7 @@ client.on('messageCreate', async message => {
 
     if (command === 'gerarcodigo') {
         try {
-            const response = await axios.post(`${backendUrl}/backend/server.js`);
+            const response = await axios.post(`${backendUrl}/api/generate-code`);
             const { code } = response.data;
             
             message.channel.send(`**Código de acesso gerado:** \`${code}\`\nEste código é válido por 15 minutos.`);
