@@ -26,6 +26,7 @@ client.on('messageCreate', async message => {
 
     if (command === 'gerarcodigo') {
         try {
+            // A linha abaixo envia a requisição para o seu servidor no Vercel.
             const response = await axios.post(`${backendUrl}/api/generate-code`);
             const { code } = response.data;
             
