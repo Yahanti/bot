@@ -26,10 +26,9 @@ client.on('messageCreate', async message => {
 
     if (command === 'gerarcodigo') {
         try {
-            // A linha abaixo envia a requisição para o seu servidor no Vercel.
             const response = await axios.post(`${backendUrl}/api/generate-code`);
             const { code } = response.data;
-            
+
             message.channel.send(`**Código de acesso gerado:** \`${code}\`\nEste código é válido por 15 minutos.`);
         } catch (error) {
             console.error('Erro ao gerar código:', error.message);
