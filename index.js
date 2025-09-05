@@ -1,40 +1,47 @@
-const { Client, GatewayIntentBits } = require('discord.js');
-const axios = require('axios');
+const { Client, GatewayIntentBits } = require("discord.js");
+const axios = require("axios");
+require("dotenv").config();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+});
 
 const token = process.env.DISCORD_TOKEN;
 let backendUrl = process.env.VERCEL_URL;
 
-if (backendUrl && !backendUrl.startsWith('http')) {
+if (backendUrl && !backendUrl.startsWith("http")) {
   backendUrl = `https://${backendUrl}`;
 }
 
-client.once('clientReady', () => {
-    console.log(`Bot online como ${client.user.tag}!`);
+client.once("ready", () => {
+  console.log(`🤖 Bot online como ${client.user.tag}`);
 });
 
-client.on('messageCreate', async message => {
-    if (message.author.bot) return;
+client.on("messageCreate", async (message) => {
+  if (message.author.bot) return;
 
-    const prefix = '!';
+  const prefix = "!";
+  if (!message.content.startsWith(prefix)) return;
 
-    if (!message.content.startsWith(prefix)) return;
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if (command === 'gerarcodigo') {
-        try {
-            const response = await axios.post(`${backendUrl}/api/generate-code`);
-            const { code } = response.data;
-
-            message.channel.send(`**Código de acesso gerado:** \`${code}\`\nEste código é válido por 15 minutos.`);
-        } catch (error) {
-            console.error('Erro ao gerar código:', error.message);
-            message.channel.send('Não foi possível gerar um código no momento. Por favor, tente novamente.');
-        }
+  if (command === "pingapi") {
+    try {
+      const response = await axios.get(`${backendUrl}/api/status`);
+      return message.reply(`✅ API respondeu: ${response.data.message}`);
+    } catch (err) {
+      return message.reply("❌ Erro ao conectar com o backend.");
     }
+  }
+
+  if (command === "ping") {
+    return message.reply("🏓 Pong!");
+  }
 });
 
 client.login(token);
