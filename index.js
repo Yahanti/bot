@@ -17,8 +17,8 @@ if (backendUrl && !backendUrl.startsWith("http")) {
   backendUrl = `https://${backendUrl}`;
 }
 
-client.once("ready", () => {
-  console.log(`🤖 Bot online como ${client.user.tag}`);
+client.once("clientReady", () => {
+    console.log(`✅ Bot logado como ${client.user.tag}`);
 });
 
 client.on("messageCreate", async (message) => {
